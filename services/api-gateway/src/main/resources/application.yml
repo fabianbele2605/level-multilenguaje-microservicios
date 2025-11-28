@@ -1,0 +1,29 @@
+server:
+    port:  8081
+
+spring:
+    application:
+        name: api-gateway
+
+# Configuracion de servicios externos
+go:
+    service:
+        url: http://go-service:8080
+
+# Configuración de logging
+logging:
+    level:
+        com.level.gateway: DEBUG
+        org.springframework.web: INFO
+    pattern:
+        console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Configuracion de Actuator para monitoreo
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info,metrics
+    endpoint:
+        health:
+            show-details: always
