@@ -13,7 +13,7 @@ func main()  {
 	router := mux.NewRouter()
 
 	// Configurar rutas
-	router.HandleFunc("/status", statusHandler).Methods("GET")
+	router.HandleFunc("/status", StatusHandler).Methods("GET")
 	router.HandleFunc("/process", ProcessHandler).Methods("POST")
 	router.HandleFunc("/health", HealthHandler).Methods("GET")
 
