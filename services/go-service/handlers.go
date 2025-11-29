@@ -1,11 +1,15 @@
+// handlers.go
 package main
 
+// Importar paquetes necesarios
 import (
 	"encoding/json"
 	"io"
 	"log"
 	"net/http"
 	"time"
+	"bytes"
+	"os"
 )
 
 // Estructura para respuestas JSON
@@ -77,4 +81,36 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error al codificar respuesta: %v", err)
 		http.Error(w, "Error interno del servidor", http.StatusInternalServerError)
 	}
+
+}
+// AnalyzeHandler - Envia datos a python para analisis
+func AnalyzeHandler(w http.ResponseWriter, r *http.Request) {
+	// Leer el cuerpo de la solicitud
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error al leer datos ", http.StatusBadRequest)
+		return
+	}
+
+	defer r.Body.Close()
+
+	// LLamar al servicio de Python
+	pythonURL := os.Getenv("PYTHON_SERVICE_URL")
+	if pythonURL == "" {
+		pythonURL = "http://python-service:8000"
+	}
+
+	resp, err := http.Post(pythonURL+"/analyze", "application/json", bytes.NewBuffer(body))
+	if err != nil {
+		log.Printf("Error al llamar al servicio Python: %v", err)
+		http.Error(w, "Error al comunicarse con el servicio Python", http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Reenviar la respuesta del servicio Python al cliente
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(resp.StatusCode)
+	io.Copy(w, resp.Body)
+
 }

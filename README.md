@@ -1,25 +1,259 @@
-# 🚀 Proyecto Multilenguaje - Microservicios
+# 🚀 Sistema Multilenguaje - Microservicios Distribuidos
 
-Sistema distribuido que integra **Java, Go, Python, Rust y C++** en una arquitectura de microservicios profesional.
+[![Java](https://img.shields.io/badge/Java-17-orange)](https://openjdk.java.net/)
+[![Go](https://img.shields.io/badge/Go-1.21-blue)](https://golang.org/)
+[![Python](https://img.shields.io/badge/Python-3.11-green)](https://python.org/)
+[![Rust](https://img.shields.io/badge/Rust-Latest-red)](https://rust-lang.org/)
+[![C++](https://img.shields.io/badge/C++-17-purple)](https://isocpp.org/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-blue)](https://docker.com/)
 
-## 📋 Estado del Proyecto
+## 📋 Descripción
 
-### ✅ Fase 1 - COMPLETADA (Parcial)
-- **API Gateway (Java Spring Boot)** ✅
-  - Controlador REST con endpoints
-  - Cliente HTTP para comunicación con Go
-  - Configuración YAML completa
-  - Dockerfile optimizado
-  
-- **Microservicio Go** 🚧 (En progreso)
-  - Servidor HTTP básico ✅
-  - Handlers pendientes ⏳
-
-### ⏳ Próximas Fases
-- **Fase 2**: Servicio Python (FastAPI)
-- **Fase 3**: Servicio Rust (Validación)
-- **Fase 4**: Motor C++ (Alto rendimiento)
-- **Fase 5**: Docker Compose completo
-- **Fase 6**: Documentación final
+Sistema distribuido de microservicios que integra **5 lenguajes de programación** diferentes, cada uno optimizado para tareas específicas. Demuestra una arquitectura profesional de nivel empresarial con comunicación HTTP entre servicios.
 
 ## 🏗️ Arquitectura
+
+```
+Cliente → Java (Gateway) → Go (Orquestador) → Rust (Validador) → Python (Analizador) → C++ (Motor)
+```
+
+### 🎯 Propósito de cada Servicio
+
+| Servicio | Lenguaje | Puerto | Función Principal |
+|----------|----------|--------|-------------------|
+| **API Gateway** | Java Spring Boot | 8081 | Punto de entrada, enrutamiento |
+| **Orquestador** | Go + Gorilla Mux | 8082 | Coordinación de servicios |
+| **Validador** | Rust + Actix Web | 8084 | Seguridad y validación |
+| **Analizador** | Python + FastAPI | 8083 | Procesamiento de datos |
+| **Motor** | C++ + httplib | 8085 | Cálculos de alto rendimiento |
+
+## 🚀 Inicio Rápido
+
+### Prerrequisitos
+- Docker y Docker Compose
+- Git
+
+### Instalación y Ejecución
+
+```bash
+# 1. Clonar el repositorio
+git clone <repository-url>
+cd level-multilenguaje-microservicios
+
+# 2. Construir y ejecutar todos los servicios
+cd docker
+docker-compose up --build
+
+# 3. Verificar que todos los servicios estén funcionando
+curl http://localhost:8081/api/health  # Java
+curl http://localhost:8082/health      # Go
+curl http://localhost:8083/health      # Python
+curl http://localhost:8084/health      # Rust
+curl http://localhost:8085/health      # C++
+```
+
+## 🧪 Pruebas y Ejemplos
+
+### Análisis Básico (Java → Go → Rust → Python)
+```bash
+curl -X POST http://localhost:8081/api/go/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "numbers": [1, 2, 3, 4, 5],
+    "text": "Ejemplo de análisis multilenguaje"
+  }'
+```
+
+**Respuesta esperada:**
+```json
+{
+  "service": "python-service",
+  "timestamp": "2025-11-29T19:37:48.719303",
+  "analysis": {
+    "count": 5,
+    "sum": 15.0,
+    "average": 3.0,
+    "text_length": 33,
+    "word_count": 4
+  }
+}
+```
+
+### Análisis Pesado (Python → C++)
+```bash
+curl -X POST http://localhost:8083/heavy-analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "numbers": [3, 5, 7],
+    "text": "Cálculos matemáticos avanzados"
+  }'
+```
+
+**Respuesta esperada:**
+```json
+{
+  "service": "python-service",
+  "basic_analysis": {
+    "count": 3,
+    "sum": 15.0,
+    "average": 5.0,
+    "text_length": 30,
+    "word_count": 3
+  },
+  "heavy_calculations": {
+    "factorial_sum": 5166.0,
+    "geometric_mean": 4.717693980316532,
+    "standard_deviation": 1.632993161855452,
+    "fibonacci_sequence": [0, 1, 1, 2, 3, 5, 8]
+  }
+}
+```
+
+### Validación de Errores (Rust)
+```bash
+# Probar validación con datos inválidos
+curl -X POST http://localhost:8081/api/go/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "numbers": [],
+    "text": "Array vacío debería fallar"
+  }'
+```
+
+## 📁 Estructura del Proyecto
+
+```
+level-multilenguaje-microservicios/
+├── services/
+│   ├── api-gateway/          # Java Spring Boot
+│   │   ├── src/main/java/
+│   │   ├── pom.xml
+│   │   └── Dockerfile
+│   ├── go-service/           # Go HTTP Server
+│   │   ├── main.go
+│   │   ├── handlers.go
+│   │   ├── go.mod
+│   │   └── Dockerfile
+│   ├── python-service/       # Python FastAPI
+│   │   ├── main.py
+│   │   ├── requirements.txt
+│   │   └── Dockerfile
+│   ├── rust-service/         # Rust Actix Web
+│   │   ├── src/main.rs
+│   │   ├── Cargo.toml
+│   │   └── Dockerfile
+│   └── cpp-service/          # C++ httplib
+│       ├── src/main.cpp
+│       ├── CMakeLists.txt
+│       └── Dockerfile
+├── docker/
+│   └── docker-compose.yml    # Orquestación completa
+├── docs/
+│   ├── architecture.md       # Diagrama de arquitectura
+│   └── technical-documentation.md
+└── README.md
+```
+
+## 🔧 Desarrollo
+
+### Agregar Nuevos Endpoints
+
+#### Java (API Gateway)
+```java
+@PostMapping("/nuevo-endpoint")
+public ResponseEntity<String> nuevoEndpoint(@RequestBody String request) {
+    // Implementación
+}
+```
+
+#### Go (Orquestador)
+```go
+router.HandleFunc("/nuevo", NuevoHandler).Methods("POST")
+```
+
+#### Python (Analizador)
+```python
+@app.post("/nuevo-analisis")
+async def nuevo_analisis(data: DataRequest):
+    # Implementación
+```
+
+### Escalabilidad
+```bash
+# Escalar servicios específicos
+docker-compose up --scale python-service=3 --scale go-service=2
+```
+
+## 🔒 Seguridad
+
+- **Validación en capas**: Cada servicio valida su entrada
+- **Aislamiento**: Contenedores Docker separados
+- **Red interna**: Comunicación solo entre servicios autorizados
+- **Rust como firewall**: Validación estricta de tipos y rangos
+
+## 📊 Monitoreo
+
+### Health Checks
+Todos los servicios exponen `/health`:
+```bash
+# Verificar estado de todos los servicios
+for port in 8081 8082 8083 8084 8085; do
+  echo "Puerto $port: $(curl -s http://localhost:$port/health | jq -r .status)"
+done
+```
+
+### Logs
+```bash
+# Ver logs de todos los servicios
+docker-compose logs -f
+
+# Ver logs de un servicio específico
+docker-compose logs -f python-service
+```
+
+## 🚀 Casos de Uso
+
+### 1. Análisis de Datos Científicos
+- **Python**: Procesamiento estadístico
+- **C++**: Cálculos matemáticos intensivos
+- **Rust**: Validación de datos experimentales
+
+### 2. Sistema Financiero
+- **Java**: API empresarial robusta
+- **Go**: Procesamiento concurrente de transacciones
+- **Rust**: Validación de seguridad crítica
+
+### 3. Procesamiento de IoT
+- **Go**: Ingesta de datos en tiempo real
+- **Python**: Análisis de patrones
+- **C++**: Algoritmos de optimización
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -am 'Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Crea un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
+
+## 🏆 Características Destacadas
+
+- ✅ **5 lenguajes** integrados seamlessly
+- ✅ **Microservicios** independientes y escalables
+- ✅ **Docker Compose** para orquestación
+- ✅ **Comunicación HTTP** robusta
+- ✅ **Validación multicapa** de seguridad
+- ✅ **Cálculos de alto rendimiento**
+- ✅ **Arquitectura de nivel empresarial**
+
+## 📞 Soporte
+
+Para preguntas o soporte, crear un issue en el repositorio o contactar al equipo de desarrollo.
+
+---
+
+**Desarrollado con ❤️ usando 5 lenguajes de programación**

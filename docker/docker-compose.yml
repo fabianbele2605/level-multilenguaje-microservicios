@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # API Gateway (Java Spring Boot)
+  api-gateway:
+    build:
+      context: ../services/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - GO_SERVICE_URL=http://go-service:8080
+    depends_on:
+      - go-service
+    networks:
+      - microservices-net
+
+  # Go Service
+  go-service:
+    build:
+      context: ../services/go-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - PORT=8080
+      - PYTHON_SERVICE_URL=http://rust-service:8001
+    depends_on:
+      - rust-service
+    networks:
+      - microservices-net
+
+  
+  # Python Service (FastAPI)
+  python-service:
+    build:
+      context: ../services/python-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8000"
+    environment:
+      - CPP_SERVICE_URL=http://cpp-service:8002
+    depends_on:
+      - cpp-service
+    networks:
+      - microservices-net
+
+  
+  # Rust Service (Validation)
+  rust-service:
+    build:
+      context: ../services/rust-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8001"
+    environment:
+      - PYTHON_SERVICE_URL=http://python-service:8000
+    depends_on:
+      - python-service
+    networks:
+      - microservices-net
+
+    # C++ Service (Computation)
+  cpp-service:
+    build:
+      context: ../services/cpp-service
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8002"
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    driver: bridge

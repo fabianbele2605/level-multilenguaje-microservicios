@@ -1,5 +1,7 @@
+//  main.go
 package main
 
+// Importar paquetes necesarios
 import (
 	"log"
 	"net/http"
@@ -8,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+//
 func main()  {
 	// Crear router
 	router := mux.NewRouter()
@@ -16,6 +19,7 @@ func main()  {
 	router.HandleFunc("/status", StatusHandler).Methods("GET")
 	router.HandleFunc("/process", ProcessHandler).Methods("POST")
 	router.HandleFunc("/health", HealthHandler).Methods("GET")
+	router.HandleFunc("/analyze", AnalyzeHandler).Methods("POST")
 
 	// Middleware de logging
 	router.Use(loggingMiddleware)
