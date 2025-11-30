@@ -8,8 +8,20 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+    user: "1000:1000"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       - GO_SERVICE_URL=http://go-service:8080
+    restart: unless-stopped
     depends_on:
       - go-service
     networks:
@@ -22,9 +34,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8082:8080"
+    user: "1000:1000"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       - PORT=8080
       - PYTHON_SERVICE_URL=http://rust-service:8001
+    restart: unless-stopped
     depends_on:
       - rust-service
     networks:
@@ -38,8 +62,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8083:8000"
+    user: "1000:1000"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       - CPP_SERVICE_URL=http://cpp-service:8002
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
     depends_on:
       - cpp-service
     networks:
@@ -53,8 +90,20 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8084:8001"
+    user: "1000:1000"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       - PYTHON_SERVICE_URL=http://python-service:8000
+    restart: unless-stopped
     depends_on:
       - python-service
     networks:
@@ -67,6 +116,18 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8085:8002"
+    user: "1000:1000"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
     networks:
       - microservices-net
 

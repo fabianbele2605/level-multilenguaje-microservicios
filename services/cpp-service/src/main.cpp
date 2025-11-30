@@ -75,6 +75,7 @@ int main() {
     server.Get("/health", [](const httplib::Request&, httplib::Response& res) {
         json response = {
             {"service", "cpp-service"},
+            {"message", "Servicio C++ saludable"},
             {"status", "healthy"}
         };
         // Responder con JSON
@@ -119,7 +120,7 @@ int main() {
     });
 
     // Iniciar el servidor en el puerto 8002
-    std::cout << "C++ Service is running on port 8002" << std::endl;
+    std::cout << "Servicio C++ ejecutándose en puerto 8002" << std::endl;
     server.listen("0.0.0.0", 8002);
 
     // Fin del programa

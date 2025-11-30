@@ -1,4 +1,4 @@
-// src/main.rs
+    // src/main.rs
 use actix_web::{web, App, HttpServer, Result, HttpResponse, middleware::Logger};
 use serde::{Deserialize, Serialize};
 
@@ -21,6 +21,7 @@ struct ValidationResponse {
 async fn health() -> Result<HttpResponse> {
     Ok(HttpResponse::Ok().json(serde_json::json!({
         "service": "rust-service",
+        "message": "Servicio Rust saludable",
         "status": "healthy"
     })))
 }
@@ -31,16 +32,34 @@ async fn validate(data: web::Json<DataRequest>) -> Result<HttpResponse> {
     if data.numbers.is_empty() {
         return Ok(HttpResponse::BadRequest().json(ValidationResponse {
             is_valid: false,
-            message: "The 'numbers' array cannot be empty.".to_string(),
+            message: "El array 'numbers' no puede estar vacío.".to_string(),
             data: None,
         }));
+    }
+
+    if data.numbers.len() > 100 {
+        return Ok(HttpResponse::BadRequest().json(ValidationResponse {
+            is_valid: false,
+            message: "Demasiados números (máximo 100)".to_string(),
+            data: None,
+        }));
+    }
+
+    for &num in &data.numbers {
+        if num.abs() > 1_000_000.0 {
+            return Ok(HttpResponse::BadRequest().json(ValidationResponse {
+                is_valid: false,
+                message: "Número fuera del rango válido".to_string(),
+                data: None,
+            }));
+        }
     }
 
     // Validar longitud del texto
     if data.text.len() > 1000 {
         return Ok(HttpResponse::BadRequest().json(ValidationResponse {
             is_valid: false,
-            message: "The 'text' field exceeds the maximum length of 1000 characters.".to_string(),
+            message: "El campo 'text' excede la longitud máxima de 1000 caracteres.".to_string(),
             data: None,
         }));
     }
@@ -48,7 +67,10 @@ async fn validate(data: web::Json<DataRequest>) -> Result<HttpResponse> {
     // Si pasa validacion, enviar a Python
     let python_url = std::env::var("PYTHON_SERVICE_URL")
         .unwrap_or_else(|_|"http://python-service:8000".to_string());
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(10))
+        .build()
+        .unwrap();
     let response = client
         .post(&format!("{}/analyze", python_url))
         .json(&*data)
@@ -65,7 +87,7 @@ async fn validate(data: web::Json<DataRequest>) -> Result<HttpResponse> {
         // En caso de error al comunicarse con el servicio Python
         Err(_) => Ok(HttpResponse::InternalServerError().json(ValidationResponse {
             is_valid: false,
-            message: "Failed to communicate with Python service.".to_string(),
+            message: "Error al comunicarse con el servicio Python.".to_string(),
             data: None,
         })),
     }

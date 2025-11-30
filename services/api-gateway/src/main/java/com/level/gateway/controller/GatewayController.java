@@ -2,6 +2,8 @@
 package com.level.gateway.controller;
 
 // importaciones necesarias
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.level.gateway.dto.AnalyzeRequest;
 import com.level.gateway.service.GoServiceClient;
+
+import jakarta.validation.Valid;
+
 
 // Controlador REST para el API Gateway
 @RestController
@@ -24,10 +31,15 @@ public class GatewayController {
     // Cliente del servicio Go
     private GoServiceClient goServiceClient;
 
+    private static final Logger logger = LoggerFactory.getLogger(GatewayController.class);
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     // Endpoint de salud del API Gateway
     @GetMapping("/health")
     public ResponseEntity<String> health() {
-        return ResponseEntity.ok("API Gateway Ok");
+        return ResponseEntity.ok("{\"service\": \"api-gateway\", \"message\": \"API Gateway saludable\", \"status\": \"healthy\"}");
     }
 
     // Endpoint para obtener el estado del servicio Go
@@ -59,14 +71,16 @@ public class GatewayController {
     // Endpoint para analizar una solicitud en el servicio Go
     @PostMapping("/go/analyze")
     // Llamada al cliente del servicio Go para analizar la solicitud
-    public ResponseEntity<String> analyzeGoRequest(@RequestBody String request) {
+    public ResponseEntity<String> analyzeGoRequest(@Valid @RequestBody AnalyzeRequest request) {
         // Llamada al cliente del servicio Go para analizar la solicitud
         try {
-            String response = goServiceClient.analyzeRequest(request);
+            String jsonRequest = objectMapper.writeValueAsString(request);
+            String response = goServiceClient.analyzeRequest(jsonRequest);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            logger.error("Error procesando solicitud de análisis", e);
             return ResponseEntity.status(500)
-                .body("Error al analizar la solicitud en Go: " + e.getMessage());
+                .body("{\"error\": \"Error procesando solicitud\"}");
         }
     }
 
