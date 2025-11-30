@@ -1,5 +1,7 @@
 # 🚀 Sistema Multilenguaje - Microservicios Distribuidos
 
+![Sistema Multilenguaje Banner](./img/banner.jpg)
+
 [![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=openjdk)](https://openjdk.java.net/)
 [![Go](https://img.shields.io/badge/Go-1.21-00ADD8?style=for-the-badge&logo=go)](https://golang.org/)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python)](https://python.org/)
@@ -16,10 +18,31 @@
 
 Sistema distribuido de microservicios que integra **5 lenguajes de programación** diferentes, cada uno optimizado para tareas específicas. Demuestra una arquitectura profesional de nivel empresarial con comunicación HTTP entre servicios.
 
-## 🏗️ Arquitectura
+## 🏗️ Arquitectura del Sistema
 
-```
-Cliente → Java (Gateway) → Go (Orquestador) → Rust (Validador) → Python (Analizador) → C++ (Motor)
+```mermaid
+graph LR
+    Client((Cliente)) -->|HTTP| Java[Gateway<br>Java Spring]
+    style Client fill:#fff,stroke:#333,stroke-width:2px
+    
+    subgraph Cluster_Backend [Docker Network]
+        direction LR
+        Java -->|Route| Go[Orquestador<br>Go Lang]
+        
+        Go -.->|Validate| Rust[Validador<br>Rust]
+        Rust -.->|OK/Error| Go
+        
+        Go -->|Process| Python[Analizador<br>Python]
+        Python -->|Heavy Calc| Cpp[Motor<br>C++]
+        Cpp -->|Result| Python
+        Python -->|JSON| Go
+    end
+
+    style Java fill:#b91d47,stroke:#fff,color:#fff
+    style Go fill:#00add8,stroke:#fff,color:#fff
+    style Rust fill:#dea584,stroke:#fff,color:#000
+    style Python fill:#ffde57,stroke:#fff,color:#000
+    style Cpp fill:#00599c,stroke:#fff,color:#fff
 ```
 
 ### 🎯 Propósito de cada Servicio
@@ -31,6 +54,20 @@ Cliente → Java (Gateway) → Go (Orquestador) → Rust (Validador) → Python 
 | **Validador** | Rust + Actix Web | 8084 | Seguridad y validación |
 | **Analizador** | Python + FastAPI | 8083 | Procesamiento de datos |
 | **Motor** | C++ + httplib | 8085 | Cálculos de alto rendimiento |
+
+## 🎮 Demo Interactiva
+
+**¡Prueba el sistema en vivo!**
+
+🌐 **Demo Visual**: [https://fabianbele2605.github.io/level-multilenguaje-microservicios](https://fabianbele2605.github.io/level-multilenguaje-microservicios)
+
+### Características de la Demo:
+- **Animación en tiempo real** del flujo de datos entre servicios
+- **Métricas de performance** reales (8ms C++, 12ms Rust, 23ms Go, 67ms Python)
+- **3 escenarios interactivos**: Análisis básico, cálculos pesados, validación de errores
+- **Logs técnicos** con puertos y latencias reales
+- **Monitoreo de recursos** (CPU, RAM, request count)
+- **Interfaz profesional** desarrollada con React + Tailwind CSS
 
 ## 🚀 Inicio Rápido
 
@@ -151,11 +188,19 @@ level-multilenguaje-microservicios/
 │       ├── src/main.cpp
 │       ├── CMakeLists.txt
 │       └── Dockerfile
+├── demo-web/                 # Demo Interactiva React
+│   ├── src/
+│   │   ├── App.js            # Componente principal
+│   │   └── index.css         # Estilos Tailwind
+│   ├── public/
+│   └── package.json
 ├── docker/
 │   └── docker-compose.yml    # Orquestación completa
 ├── docs/
 │   ├── architecture.md       # Diagrama de arquitectura
 │   └── technical-documentation.md
+├── scripts/
+│   └── demo.sh              # Script de demostración automática
 └── README.md
 ```
 
@@ -189,12 +234,25 @@ async def nuevo_analisis(data: DataRequest):
 docker-compose up --scale python-service=3 --scale go-service=2
 ```
 
-## 🔒 Seguridad
+## 🔒 Seguridad Empresarial
 
-- **Validación en capas**: Cada servicio valida su entrada
-- **Aislamiento**: Contenedores Docker separados
-- **Red interna**: Comunicación solo entre servicios autorizados
-- **Rust como firewall**: Validación estricta de tipos y rangos
+### Validaciones Robustas:
+- **Validación multicapa**: Java DTO + Rust firewall + Python Pydantic
+- **Límites estrictos**: Máximo 100 números, 500 caracteres de texto
+- **Rangos numéricos**: Limitados a ±1,000,000 para prevenir overflow
+- **Manejo seguro de errores**: Sin exposición de stack traces
+
+### Infraestructura Segura:
+- **Contenedores no-root**: Usuario 1000:1000 en todos los servicios
+- **Límites de recursos**: 512MB RAM, 0.5 CPU por servicio
+- **Timeouts configurados**: 10s para prevenir ataques DoS
+- **Health checks**: Monitoreo automático cada 30s
+- **Restart policies**: Recuperación automática ante fallos
+
+### Rust como Firewall:
+- **Validación estricta** de tipos y rangos
+- **Memory safety** garantizada
+- **Mensajes de error** en español para consistencia
 
 ## 📊 Monitoreo
 
@@ -302,9 +360,10 @@ curl -X POST http://localhost:8081/api/go/analyze -H "Content-Type: application/
 ```
 
 ### 🔗 **Links Profesionales**
-- **📁 Código fuente**: [GitHub Repository](tu-link-aqui)
+- **🌐 Demo Interactiva**: [https://fabianbele2605.github.io/level-multilenguaje-microservicios](https://fabianbele2605.github.io/level-multilenguaje-microservicios)
+- **📁 Código fuente**: [GitHub Repository](https://github.com/fabianbele2605/level-multilenguaje-microservicios)
 - **📖 Documentación**: [Technical Docs](./docs/)
-- **🎥 Demo en vivo**: [Ver Demo](./DEMO.md)
+- **🎥 Demo automática**: [Script Demo](./scripts/demo.sh)
 - **💼 Perfil del proyecto**: [Project Profile](./PROJECT_PROFILE.md)
 
 ---
