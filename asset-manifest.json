@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/level-multilenguaje-microservicios/static/css/main.88356751.css",
+    "main.js": "/level-multilenguaje-microservicios/static/js/main.ce6156ef.js",
+    "static/js/453.6e0ef8de.chunk.js": "/level-multilenguaje-microservicios/static/js/453.6e0ef8de.chunk.js",
+    "index.html": "/level-multilenguaje-microservicios/index.html",
+    "main.88356751.css.map": "/level-multilenguaje-microservicios/static/css/main.88356751.css.map",
+    "main.ce6156ef.js.map": "/level-multilenguaje-microservicios/static/js/main.ce6156ef.js.map",
+    "453.6e0ef8de.chunk.js.map": "/level-multilenguaje-microservicios/static/js/453.6e0ef8de.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.88356751.css",
+    "static/js/main.ce6156ef.js"
+  ]
+}
