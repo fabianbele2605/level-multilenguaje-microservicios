@@ -40,3 +40,10 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+# Documentación temporal (solo local)
+DEMO.md
+Documentación_Final.md
+LINKEDIN_POST.md
+PROJECT_PROFILE.md
+Proyecto Multilenguaje.md
